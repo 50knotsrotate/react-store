@@ -2,7 +2,9 @@ require('dotenv').config();
 const PORT = process.env.PORT || 4000;
 
 // Init the database
-const connect = require('./db/client');
+const db = require('./db/client');
+
+db.connect();
 
 const morgan = require('morgan');
 // Might not need axios, but I will leave it here just in case I do.

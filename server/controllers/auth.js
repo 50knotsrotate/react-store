@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { insert } = require('../db/client');
 module.exports = {
   signup: function(req, res, next) {
     const { username, password } = req.body;
@@ -12,8 +13,13 @@ module.exports = {
         return next(err);
       } else {
         // Save into db.
+          const user = insert({ username, hash });
+          
         // Set user session
+          req.session.user.username = user;
+
         // Send response back
+          res.status(200).send(req.session)
           
       }
     });
