@@ -55,4 +55,90 @@ module.exports = {
   }
 };
 ```
-#### Now, I am going to have to setup a mongoDB instance to store user info.
+#### Now, I am going to have to setup a mongoDB instance to store user info. Here is my mongo module so far
+
+```javascript
+const client = require("mongodb").MongoClient;
+
+const url = "mongodb://localhost:27017";
+
+let dbo;
+
+module.exports = {
+  connect: function() {
+    client.connect(url, function(err, db) {
+      if (err) {
+        // TODO: Handle error
+      }
+      dbo = db.db("db");
+      dbo.createCollection("users", function(err, res) {
+        if (err) {
+          //  TODO: Handle error
+        } else {
+          console.log("Collection created!");
+        }
+      });
+      console.log("Database created");
+    });
+  },
+  insert: function(object) {
+    dbo.collection("users").insertOne(object, function(err, res) {
+      if (err) return console.log(err); //TODO error handle
+      const { username, hash } = res.ops[0];
+      const user = { username, hash };
+      return user;
+    });
+  }
+};
+```
+
+#### and in my index.js file, bring in the connect function
+```javascript
+const db = require('./db/client');
+
+db.connect();
+
+```
+#### and when a _POST_ is made to /signup: 
+```javascript
+signup: function(req, res, next) {
+    const { username, password } = req.body;
+
+    // hash the userpassword
+    const saltrounds = 10;
+
+    bcrypt.hash(password, saltrounds, function(err, hash) {
+      if (err) {
+        //Pass the error to the error handler
+        return next(err);
+      } else {
+        // Save into db.
+          const user = insert({ username, hash });
+          
+        // Set user session
+          req.session.user.username = user;
+
+        // Send newly created user back to client
+          res.status(200).send(req.session)
+          
+      }
+    });
+```
+
+#### But I cant do anything with sessions: I havent installed it yet. ```npm install express-session```
+
+#### and adding this to my index.js file:
+```javascript
+
+const session = require('express-session');
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  })
+);
+```
+
+#### Later on I will be installing and using Redis as my session store, but for now this will do. 
