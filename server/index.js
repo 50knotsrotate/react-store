@@ -13,6 +13,8 @@ const app = express();
 
 app.use(morgan('dev'));
 
+app.use(express.json());
+
 app.post('/signup', signup);
 
 app.post('/signin', signin);
