@@ -11,3 +11,18 @@
     * Express
 
 * Mongodb
+
+First thing I am going to do is setup my endpoints for user authentication
+
+* _POST_ /auth/signup
+* _POST_ /auth/login
+* _POST_ /auth/logout
+
+```javascript
+// All the callbacks are located in ./controllers/auth.js
+app.post('/signup', signup); 
+
+app.post('/signin', signin);
+
+app.post('/logout', logout);
+```
