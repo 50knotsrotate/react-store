@@ -1,9 +1,8 @@
-const bcrypt = require('bcryptjs');
-const { insert } = require('../db/client');
+const bcrypt = require("bcryptjs");
+const { createUser, isUniqueUsername } = require("../db/client");
 module.exports = {
   signup: function(req, res, next) {
     const { username, password } = req.body;
-
     // hash the userpassword
     const saltrounds = 10;
 
@@ -13,14 +12,17 @@ module.exports = {
         return next(err);
       } else {
         // Save into db.
-          const user = insert({ username, hash });
-          
-        // Set user session
-          req.session.user.username = user;
+        createUser({ username, hash }, function(user, error) {
+          if (error) return next(error);
 
-        // Send response back
-          res.status(200).send(req.session)
-          
+          // Set user session
+          req.session.user = {};
+
+          req.session.user.username = user.username;
+
+          // Send response back
+          res.status(200).send(req.session.user);
+        });
       }
     });
   },

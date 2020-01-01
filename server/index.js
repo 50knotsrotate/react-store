@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 4000;
 // Init the database
 const db = require('./db/client');
 
-db.connect();
+db.connect(process.env.NODE_ENV === 'development' ? "mongodb://localhost:27017" : 'other thing');
 
 const morgan = require('morgan');
 // Might not need axios, but I will leave it here just in case I do.
@@ -23,7 +23,8 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+      cookie: { secure: true },
+      maxAge: 100000 //Kind of arbitrary, will put more thought into this later
   })
 );
 

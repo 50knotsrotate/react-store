@@ -55,6 +55,7 @@ module.exports = {
   }
 };
 ```
+
 #### Now, I am going to have to setup a mongoDB instance to store user info. Here is my mongo module so far
 
 ```javascript
@@ -81,56 +82,74 @@ module.exports = {
       console.log("Database created");
     });
   },
-  insert: function(object) {
+  createUser: function(object, callback) {
     dbo.collection("users").insertOne(object, function(err, res) {
-      if (err) return console.log(err); //TODO error handle
+      if (err) return callback(null, err);
       const { username, hash } = res.ops[0];
       const user = { username, hash };
-      return user;
+      return callback(user, null);
     });
+  },
+  isUniqueUsername: function(username, next) {
+    dbo
+      .collection("users")
+      .find({}, { username })
+      .toArray(function(err, result) {
+        if (err) return next(err); //TODO: handle error
+        if (result.length >= 1) {
+          return false;
+        } else if (!result.length) {
+          return true;
+        }
+      });
   }
 };
 ```
 
 #### and in my index.js file, bring in the connect function
+
 ```javascript
-const db = require('./db/client');
+const db = require("./db/client");
 
 db.connect();
-
 ```
-#### and when a _POST_ is made to /signup: 
+
+#### and when a _POST_ is made to /signup:
+
 ```javascript
 signup: function(req, res, next) {
     const { username, password } = req.body;
+        if (isUniqueUsername(username, next)) {
+            // hash the userpassword
+            const saltrounds = 10;
 
-    // hash the userpassword
-    const saltrounds = 10;
+            bcrypt.hash(password, saltrounds, function (err, hash) {
+                if (err) {
+                    //Pass the error to the error handler
+                    return next(err);
+                } else {
+                    // Save into db.
+                    createUser({ username, hash }, function (user, error) {
+                        if (err) return next(error);
 
-    bcrypt.hash(password, saltrounds, function(err, hash) {
-      if (err) {
-        //Pass the error to the error handler
-        return next(err);
-      } else {
-        // Save into db.
-          const user = insert({ username, hash });
-          
-        // Set user session
-          req.session.user.username = user;
+                        // Set user session
+                        req.session.user = {};
 
-        // Send newly created user back to client
-          res.status(200).send(req.session)
-          
-      }
-    });
+                        req.session.user.username = user.username;
+
+                        // Send response back
+                        res.status(200).send(req.session.user);
+                    });
+                }
+            });
 ```
 
-#### But I cant do anything with sessions: I havent installed it yet. ```npm install express-session```
+#### But I cant do anything with sessions: I havent installed it yet. `npm install express-session`
 
 #### and adding this to my index.js file:
-```javascript
 
-const session = require('express-session');
+```javascript
+const session = require("express-session");
 app.use(
   session({
     secret: "keyboard cat",
@@ -141,4 +160,4 @@ app.use(
 );
 ```
 
-#### Later on I will be installing and using Redis as my session store, but for now this will do. 
+#### Later on I will be installing and using Redis as my session store, but for now this will do.
