@@ -61,12 +61,10 @@ module.exports = {
 ```javascript
 const client = require("mongodb").MongoClient;
 
-const url = "mongodb://localhost:27017";
-
 let dbo;
 
 module.exports = {
-  connect: function() {
+  connect: function(url) {
     client.connect(url, function(err, db) {
       if (err) {
         // TODO: Handle error
@@ -83,28 +81,27 @@ module.exports = {
     });
   },
   createUser: function(object, callback) {
-    dbo.collection("users").insertOne(object, function(err, res) {
-      if (err) return callback(null, err);
-      const { username, hash } = res.ops[0];
-      const user = { username, hash };
-      return callback(user, null);
-    });
-  },
-  isUniqueUsername: function(username, next) {
+    // First check if the username already exists
     dbo
       .collection("users")
-      .find({}, { username })
-      .toArray(function(err, result) {
-        if (err) return next(err); //TODO: handle error
-        if (result.length >= 1) {
-          return false;
-        } else if (!result.length) {
-          return true;
-        }
+      .find({ username: object.username })
+      .toArray(function(err, res) {
+        // If there is already an entry, return that error
+        if (res.length > 0) return callback(null, "Username is taken");
+
+        // else, insert into database
+        dbo.collection("users").insertOne(object, function(err, res) {
+          if (err) return callback(null, err);
+          const { username, hash } = res.ops[0];
+          const user = { username, hash };
+          return callback(user, null);
+        });
       });
   }
 };
 ```
+
+##### Question: Is there a way for me to create a new user without making 2 DB calls? I have one for checking if the username is taken, and one for inserting.
 
 #### and in my index.js file, bring in the connect function
 
@@ -161,3 +158,11 @@ app.use(
 ```
 
 #### Later on I will be installing and using Redis as my session store, but for now this will do.
+
+#### Now I think its time to write some signup tests. I will be using mocha, just because Im more used to it... Plus I like the way it makes it easy to run asyncronous tests. 
+
+``` npm install mocha ``` 
+
+#### Now I will make a /db/tests.js file and start writing my tests there. 
+
+#### Here is what I came up with: 

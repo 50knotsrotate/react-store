@@ -38,9 +38,21 @@ app.post('/signin', signin);
 
 app.post('/logout', logout);
 
+app.get('/', (req, res) => { 
+    res.status(200).send('Hello')
+})
+
+//Error handler
+app.use(function (error, req, res, next) { 
+    res.status(500).json({
+        error
+    })
+})
+
 
 app.listen(PORT, () => { 
     console.log(`Listening on port ${PORT}`)
 })
 
+module.exports = app;
 
