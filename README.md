@@ -28,9 +28,7 @@ app.post("/signin", signin);
 app.post("/logout", logout);
 ```
 
-##### I know there is way to create middleware to handle certain routes (like app.use('/auth')), but I havent quite figured that out yet. I'll revisit that (Maybe...) but for now, this is going to work
-
-#### Right now, these callbacks dont do anything. Im going to start with signing up.
+#### Right now, these route handlers dont do anything. Im going to start with signing up.
 
 `npm install bcrypt`
 
