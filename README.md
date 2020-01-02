@@ -305,4 +305,4 @@ signin: function(req, res, next) {
   }
 ```
 
-#### Now, we just have to write some tests to make sure this behaves as expected. 
+#### Now, I just have to write some tests to make sure this behaves as expected. 
