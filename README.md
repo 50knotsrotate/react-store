@@ -138,9 +138,9 @@ app.use(
 
 #### Later on I will be installing and using Redis as my session store, but for now this will do.
 
-#### Now I think its time to write some signup tests. I will be using mocha, just because Im more used to it... Plus I like the way it makes it easy to run asyncronous tests.
+#### Now I think its time to write some signup tests. I will be using mocha and chai.
 
-`npm install mocha`
+`npm install mocha chai chai-http`
 
 #### Now I will make a /db/tests.js file and start writing my tests there.
 
