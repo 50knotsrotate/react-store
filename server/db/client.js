@@ -11,10 +11,10 @@ module.exports = {
       dbo = db.db("db");
       dbo.createCollection("users", function(err, res) {
         if (err) {
-          console.log('collection not created')
-        } 
+          console.log("collection not created");
+        }
       });
-    //   console.log("Database created");
+      //   console.log("Database created");
     });
   },
   createUser: function(object, callback) {
@@ -34,5 +34,5 @@ module.exports = {
           return callback(user, null);
         });
       });
-  }
+    }
 };
