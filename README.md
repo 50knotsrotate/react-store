@@ -220,6 +220,6 @@ describe("Sign in", function() {
 
 ```
 
-#### Not done with these tests, but I'm happy with this for now. 
+#### Not done with these tests, but I'm happy with this for now. Next: Signing in, then I will create forms for these endpoints with redux-forms.
 
 
