@@ -34,5 +34,15 @@ module.exports = {
           return callback(user, null);
         });
       });
-    }
+    },
+  // The following are for testing purposes only
+    clear: function (callback) {
+        dbo.collection('users').deleteOne({ username: 'test123' }, function (err, _obj) {
+            if (err) {
+                return callback(err)
+            } else { 
+                return callback(null)
+            }
+         })
+     }
 };
