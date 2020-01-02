@@ -120,7 +120,6 @@ const db = require("./db/client");
 db.connect();
 ```
 
-
 #### But I cant do anything with sessions: I havent installed it yet. `npm install express-session`
 
 #### and adding this to my index.js file:
@@ -146,6 +145,7 @@ app.use(
 #### Now I will make a /db/tests.js file and start writing my tests there.
 
 #### Here is what I came up with so far:
+
 ```javascript
 const assert = require("chai").assert;
 const app = require("../server/index");
@@ -170,7 +170,7 @@ describe("Sign in", function() {
     });
   });
 
-  after(function (done) {
+  after(function(done) {
     // Clear the users table...again. Once before EACH test, and once after ALL tests.
     db.clear(function(err) {
       if (err) {
@@ -213,13 +213,96 @@ describe("Sign in", function() {
       .catch(err => {
         console.log(`ERROR: ${err}`);
         done();
-        // TODO: Error handling 
+        // TODO: Error handling
       });
   });
 });
-
 ```
 
 #### Not done with these tests, but I'm happy with this for now. Next: Signing in, then I will create forms for these endpoints with redux-forms.
 
+#### Signing in:
 
+- _POST_ username & password to /signin
+- Check if username exists in DB
+  - If it does
+    - Check hashed password against user submitted password
+      - If they match
+        - Update req.session
+        - send back user object with a 200 status code
+      - If they dont match
+        - Send back wrong password error with a 401 status code
+  - If it does not
+    - send back username not found error with 404 status code
+
+#### Here is what I came up with.
+
+```javascript
+signin: function(req, res, next) {
+    const { username, password } = req.body;
+      findUser({username}, function(user, err) {
+      // If there was an error, forward to error handler
+      if (err) return next(err);
+
+      // Compare the passwords
+      bcrypt.compare(password, user.hash, function(err, res) {
+        // If the password was correct
+        if (res === true) {
+          // Set the user session
+          req.session = {};
+          req.session.user = user.username;
+
+          // and send it to the client
+          return res.status(200).send(req.session.user);
+
+          // If they do not match
+        } else {
+          // Forward the error
+          return next({
+            message: "Incorrect password",
+            statusCode: 404
+          });
+        }
+      });
+    });
+  }
+```
+
+#### And in my client.js module, I wrote this function
+
+```javascript
+      findUser: function(userObj, callback) {
+    dbo
+      .collection("users")
+      .find({ username: userObj.username })
+      .toArray(function(err, res) {
+        if (err) return callback(null, err);
+
+        // If we got more than one object back, something went way wrong. Let the error handler know.
+        if (res.length > 1)
+          return callback(null, {
+            message: "Internal Server Error",
+            statusCode: 500
+          });
+
+          // If a user was not found, let the error handler know.
+        if (!res.length) {
+          return callback(null, {
+            message: "User not found",
+            statusCode: 404
+          });
+        }
+
+        // Else, return the user
+        return callback(
+          {
+            username: res[0].username,
+            hash: res[0].hash
+          },
+          null
+        );
+      });
+  }
+```
+
+#### Now, we just have to write some tests to make sure this behaves as expected. 

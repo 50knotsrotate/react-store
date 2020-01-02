@@ -34,15 +34,43 @@ module.exports = {
           return callback(user, null);
         });
       });
-    },
+  },
+  findUser: function(userObj, callback) {
+    dbo
+      .collection("users")
+      .find({ username: userObj.username })
+      .toArray(function(err, res) {
+        if (err) return callback(null, err);
+        if (res.length > 1)
+          return callback(null, {
+            message: "Internal Server Error",
+            statusCode: 500
+          });
+        if (!res.length) {
+          return callback(null, {
+            message: "User not found",
+            statusCode: 404
+          });
+        }
+        return callback(
+          {
+            username: res[0].username,
+            hash: res[0].hash
+          },
+          null
+        );
+      });
+  },
   // The following are for testing purposes only
-    clear: function (callback) {
-        dbo.collection('users').deleteOne({ username: 'test123' }, function (err, _obj) {
-            if (err) {
-                return callback(err)
-            } else { 
-                return callback(null)
-            }
-         })
-     }
+  clear: function(callback) {
+    dbo
+      .collection("users")
+      .deleteOne({ username: "test123" }, function(err, _obj) {
+        if (err) {
+          return callback(err);
+        } else {
+          return callback(null);
+        }
+      });
+  }
 };

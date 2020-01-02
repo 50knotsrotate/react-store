@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { createUser, isUniqueUsername } = require("../db/client");
+const { createUser, findUser } = require("../db/client");
 module.exports = {
   signup: function(req, res, next) {
     const { username, password } = req.body;
@@ -26,6 +26,33 @@ module.exports = {
       }
     });
   },
-  signin: function(req, res, next) {},
+  signin: function(req, res, next) {
+    const { username, password } = req.body;
+      findUser({username}, function(user, err) {
+      // If there was an error, forward to error handler
+      if (err) return next(err);
+
+      // Compare the passwords
+      bcrypt.compare(password, user.hash, function(err, res) {
+        // If the password was correct
+        if (res === true) {
+          // Set the user session
+          req.session = {};
+          req.session.user = user.username;
+
+          // and send it to the client
+          return res.status(200).send(req.session.user);
+
+          // If they do not match
+        } else {
+          // Forward the error
+          return next({
+            message: "Incorrect password",
+            statusCode: 404
+          });
+        }
+      });
+    });
+  },
   logout: function(req, res, next) {}
 };
