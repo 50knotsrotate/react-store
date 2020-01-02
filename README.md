@@ -15,12 +15,12 @@
 
 First thing I am going to do is setup my endpoints for user authentication
 
-- _POST_ /auth/signup
-- _POST_ /auth/login
-- _POST_ /auth/logout
+- _POST_ /signup
+- _POST_ /login
+- _POST_ /logout
 
 ```javascript
-// All the callbacks are located in ./controllers/auth.js
+// All the route handler are located in ./controllers/auth.js
 app.post("/signup", signup);
 
 app.post("/signin", signin);
@@ -28,28 +28,39 @@ app.post("/signin", signin);
 app.post("/logout", logout);
 ```
 
-#### Right now, these callbacks dont do anything. Im going to start with signing in.
+##### I know there is way to create middleware to handle certain routes (like app.use('/auth')), but I havent quite figured that out yet. I'll revisit that (Maybe...) but for now, this is going to work
+
+#### Right now, these callbacks dont do anything. Im going to start with signing up.
 
 `npm install bcrypt`
 
 ```javascript
+// This runs whenever a POST is made to /signup
+// There will be futher validation on the front end before a POST is made here (no empty password etc...)
 const bcrypt = require("bcrypt");
 module.exports = {
-  signin: function(req, res, next) {
-    // Get the username and password from the body of the request.
+  signup: function(req, res, next) {
     const { username, password } = req.body;
-
     // hash the userpassword
     const saltrounds = 10;
 
-    bcrypt.hash(password, salt, function(err, hash) {
+    bcrypt.hash(password, saltrounds, function(err, hash) {
       if (err) {
         //Pass the error to the error handler
         return next(err);
       } else {
         // Save into db.
-        // Set user session
-        // Send response back
+        createUser({ username, hash }, function(user, error) {
+          if (error) return next(error);
+
+          // Set user session
+          req.session.user = {};
+
+          req.session.user.username = user.username;
+
+          // Send response back
+          res.status(200).send(req.session.user);
+        });
       }
     });
   }
@@ -111,35 +122,6 @@ const db = require("./db/client");
 db.connect();
 ```
 
-#### and when a _POST_ is made to /signup:
-
-```javascript
-signup: function(req, res, next) {
-    const { username, password } = req.body;
-        if (isUniqueUsername(username, next)) {
-            // hash the userpassword
-            const saltrounds = 10;
-
-            bcrypt.hash(password, saltrounds, function (err, hash) {
-                if (err) {
-                    //Pass the error to the error handler
-                    return next(err);
-                } else {
-                    // Save into db.
-                    createUser({ username, hash }, function (user, error) {
-                        if (err) return next(error);
-
-                        // Set user session
-                        req.session.user = {};
-
-                        req.session.user.username = user.username;
-
-                        // Send response back
-                        res.status(200).send(req.session.user);
-                    });
-                }
-            });
-```
 
 #### But I cant do anything with sessions: I havent installed it yet. `npm install express-session`
 
@@ -159,10 +141,87 @@ app.use(
 
 #### Later on I will be installing and using Redis as my session store, but for now this will do.
 
-#### Now I think its time to write some signup tests. I will be using mocha, just because Im more used to it... Plus I like the way it makes it easy to run asyncronous tests. 
+#### Now I think its time to write some signup tests. I will be using mocha, just because Im more used to it... Plus I like the way it makes it easy to run asyncronous tests.
 
-``` npm install mocha ``` 
+`npm install mocha`
 
-#### Now I will make a /db/tests.js file and start writing my tests there. 
+#### Now I will make a /db/tests.js file and start writing my tests there.
 
-#### Here is what I came up with: 
+#### Here is what I came up with so far:
+```javascript
+const assert = require("chai").assert;
+const app = require("../server/index");
+var chai = require("chai"),
+  chaiHttp = require("chai-http");
+var expect = require("chai").expect;
+const db = require("../server/db/client");
+const auth = require("../server/controllers/auth");
+
+chai.use(chaiHttp);
+
+describe("Sign in", function() {
+  beforeEach(function(done) {
+    // Clear the users table
+    db.clear(function(err) {
+      if (err) {
+        console.log("USERS TABLE NOT CLEARED");
+        console.log(err);
+      } else {
+        done();
+      }
+    });
+  });
+
+  after(function (done) {
+    // Clear the users table...again. Once before EACH test, and once after ALL tests.
+    db.clear(function(err) {
+      if (err) {
+        console.log("USERS TABLE NOT CLEARED");
+        console.log(err);
+      } else {
+        done();
+      }
+    });
+  });
+
+  it("Returns a new user when one signs up", function(done) {
+    chai
+      .request(app)
+      .post("/signup")
+      .send({ username: "test123", password: "password" })
+      .then(res => {
+        expect(res.body).to.not.eq(null);
+        expect(res.body.password).to.not.eq("password");
+        expect(Object.keys(res.body).length).to.eq(1);
+        done();
+      });
+  });
+
+  it("returns an error if a username is already taken", function(done) {
+    chai
+      .request(app)
+      .post("/signup")
+      .send({ username: "test123", password: "password" })
+      .then(res => {
+        chai
+          .request(app)
+          .post("/signup")
+          .send({ username: "test123", password: "password" })
+          .then(res => {
+            expect(res.body.error).to.eq("Username is taken");
+            done();
+          });
+      })
+      .catch(err => {
+        console.log(`ERROR: ${err}`);
+        done();
+        // TODO: Error handling 
+      });
+  });
+});
+
+```
+
+#### Not done with these tests, but I'm happy with this for now. 
+
+
