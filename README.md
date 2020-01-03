@@ -379,4 +379,4 @@ describe("Sign In", function(done) {
 ```
 
 #### I ran the tests, and they are all passing. Still more to write, but thats all for today. 
-###### Note for tomorrow: The errors are being handled in different ways across the app. Sometimes only a string is being forwarded to the error handler(```next('some error message')```), while others get passed an object (```next(message: 'error message', statusCode: 400)```). We need to update each error so the error handler always gets the object.
+###### Note for tomorrow: The errors are being handled in different ways across the app. Sometimes only a string is being forwarded to the error handler(```next('some error message')```), while others get passed an object (```next(message: 'error message', statusCode: 400)```). I need to update each error so the error handler always gets the object.
