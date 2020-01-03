@@ -6,7 +6,7 @@ const db = require('./db/client');
 
 db.connect(process.env.NODE_ENV === 'development' ? "mongodb://localhost:27017" : 'other thing');
 
-const morgan = require('morgan');
+// const morgan = require('morgan');
 // Might not need axios, but I will leave it here just in case I do.
 const axios = require('axios');
 
@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.use(express.json());
 

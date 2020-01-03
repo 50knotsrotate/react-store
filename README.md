@@ -245,12 +245,12 @@ signin: function(req, res, next) {
       if (err) return next(err);
 
       // Compare the passwords
-      bcrypt.compare(password, user.hash, function(err, res) {
+      bcrypt.compare(password, user.hash, function(err, correct) {
         // If the password was correct
-        if (res === true) {
+        if (correct) {
           // Set the user session
-          req.session = {};
-          req.session.user = user.username;
+          req.session.user = {};
+          req.session.user.username = user.username;
 
           // and send it to the client
           return res.status(200).send(req.session.user);
@@ -265,7 +265,7 @@ signin: function(req, res, next) {
         }
       });
     });
-  }
+  },
 ```
 
 #### And in my client.js module, I wrote this function
@@ -305,4 +305,78 @@ signin: function(req, res, next) {
   }
 ```
 
-#### Now, I just have to write some tests to make sure this behaves as expected. 
+#### Now, I just have to write some tests to make sure this behaves as expected.
+
+
+```javascript
+const assert = require("chai").assert;
+const app = require("../server/index");
+var chai = require("chai"),
+  chaiHttp = require("chai-http");
+var expect = require("chai").expect;
+const db = require("../server/db/client");
+const auth = require("../server/controllers/auth");
+
+chai.use(chaiHttp);
+
+describe("Sign In", function(done) {
+  before(function(done) {
+    chai
+      .request(app)
+      .post("/signup")
+      .send({ username: "testusername", password: "wordpass" })
+      .then(res => {
+        done();
+      })
+      .catch(err => {
+        console.log(`ERROR: TEST USER NOT INSERTED`);
+      });
+  });
+
+  after(function(done) {
+    db.clear(function(err) {
+      if (err) {
+        console.log("USERS TABLE NOT CLEARED");
+        console.log(err);
+      } else {
+          done();
+      }
+    });
+  });
+
+  it("returns a user when correct credentials are supplied", function(done) {
+    chai
+      .request(app)
+      .post("/signin")
+      .send({ username: "testusername", password: "wordpass" })
+      .then(res => {
+        done();
+      })
+      .catch(err => {
+        console.log(`ERROR: TEST USER NOT INSERTED`);
+      });
+  });
+
+  it("returns an error when the username is found, but the password is incorrect", function(done) {
+    chai
+      .request(app)
+      .post("/signin")
+      .send({ username: "testusername", password: "wrong password" })
+        .then(res => {
+            expect(res.body.error.message).to.be.eq("Incorrect password");
+            expect(res.body.error.statusCode).to.be.eq(404);
+        done();
+      })
+        .catch(err => {
+        //   console.log()
+            console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
+            // done()
+      });
+  });
+});
+
+
+```
+
+#### I ran the tests, and they are all passing. Still more to write, but thats all for today. 
+###### Note for tomorrow: The errors are being handled in different ways across the app. Sometimes only a string is being forwarded to the error handler(```next('some error message')```), while others get passed an object (```next(message: 'error message', statusCode: 400)```). We need to update each error so the error handler always gets the object.

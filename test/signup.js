@@ -8,7 +8,7 @@ const auth = require("../server/controllers/auth");
 
 chai.use(chaiHttp);
 
-describe("Sign in", function() {
+describe("Sign up", function(done) {
   beforeEach(function(done) {
     // Clear the users table
     db.clear(function(err) {
@@ -21,7 +21,7 @@ describe("Sign in", function() {
     });
   });
 
-  after(function (done) {
+  after(function(done) {
     // Clear the users table...again. Once before EACH test, and once after ALL tests.
     db.clear(function(err) {
       if (err) {
@@ -29,6 +29,7 @@ describe("Sign in", function() {
         console.log(err);
       } else {
         done();
+        // process.exit();
       }
     });
   });
@@ -65,5 +66,5 @@ describe("Sign in", function() {
         console.log(`ERROR: ${err}`);
         done();
       });
-  });
+    });
 });

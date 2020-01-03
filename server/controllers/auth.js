@@ -33,12 +33,12 @@ module.exports = {
       if (err) return next(err);
 
       // Compare the passwords
-      bcrypt.compare(password, user.hash, function(err, res) {
+      bcrypt.compare(password, user.hash, function(err, correct) {
         // If the password was correct
-        if (res === true) {
+        if (correct) {
           // Set the user session
-          req.session = {};
-          req.session.user = user.username;
+          req.session.user = {};
+          req.session.user.username = user.username;
 
           // and send it to the client
           return res.status(200).send(req.session.user);
