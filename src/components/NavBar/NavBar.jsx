@@ -4,7 +4,7 @@ const { Link, Item } = Nav;
 
 export default function NavBar() {
   return (
-    <Nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <Nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4">
       <a class="navbar-brand" href="#">
         L.R JENKINS
       </a>
