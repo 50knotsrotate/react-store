@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const { createUser, findUser } = require("../db/client");
 module.exports = {
   signup: function(req, res, next) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     // hash the userpassword
     const saltrounds = 10;
 
@@ -15,7 +15,7 @@ module.exports = {
         });
       } else {
         // Save into db.
-        createUser({ username, hash }, function(user, error) {
+        createUser({ email, hash }, function(user, error) {
           if (error)
             return next({
               message: error,

@@ -18,6 +18,7 @@ module.exports = {
   },
   createUser: function(object, callback) {
     // First check if the username already exists
+    console.log(object)
     dbo
       .collection("users")
       .find({ username: object.username })

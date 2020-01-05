@@ -17,7 +17,11 @@ export default class SignUp extends Component {
 
   onSubmit = () => {
     if (this.validateForm(this.state)) {
-      axios.post("/signup", this.state);
+        axios.post("/signup", this.state).then(res => { 
+            console.log(res)
+        }).catch(err => { 
+            console.log(err)
+        })
     }
   };
 
