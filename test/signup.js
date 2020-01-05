@@ -38,7 +38,7 @@ describe("Sign up", function(done) {
     chai
       .request(app)
       .post("/signup")
-      .send({ username: "test123", password: "password" })
+      .send({ email: "test123@test.com", password: "password" })
       .then(res => {
         expect(res.body).to.not.eq(null);
         expect(res.body.password).to.not.eq("password");
@@ -47,18 +47,18 @@ describe("Sign up", function(done) {
       });
   });
 
-  it("returns an error if a username is already taken", function(done) {
+  it("returns an error if a email is already taken", function(done) {
     chai
       .request(app)
       .post("/signup")
-      .send({ username: "test123", password: "password" })
+      .send({ email: "test123@email.com", password: "password" })
       .then(res => {
         chai
           .request(app)
           .post("/signup")
-          .send({ username: "test123", password: "password" })
+          .send({ email: "test123@test.com", password: "password" })
           .then(res => {
-            expect(res.body.error.message).to.eq("Username is taken");
+            expect(res.body.error.message).to.eq("Account with that email already exists");
             done();
           });
       })

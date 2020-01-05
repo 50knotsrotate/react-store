@@ -37,13 +37,13 @@ describe("Sign In", function(done) {
     chai
       .request(app)
       .post("/signin")
-      .send({ username: "testusername", password: "wordpass" })
+      .send({ email: "testusername@fake.com", password: "wordpass" })
       .then(res => {
-        expect(res.body.username).to.eq('testusername')
+        expect(res.body.email).to.eq('testusername@fake.com')
         done();
       })
       .catch(err => {
-        console.log(`ERROR: TEST USER NOT INSERTED`);
+        // console.log(`ERROR: TEST USER NOT INSERTED`);
       });
   });
 
@@ -51,15 +51,16 @@ describe("Sign In", function(done) {
     chai
       .request(app)
       .post("/signin")
-      .send({ username: "testusername", password: "wrong password" })
-        .then(res => {
-            expect(res.body.error.message).to.be.eq("Incorrect password");
+      .send({ username: "testusername@fake.com", password: "wrong password" })
+      .then(res => {
+          // console.log(res.body)
+            expect(res.body.error.message.message).to.be.eq("Incorrect password");
             expect(res.body.error.statusCode).to.be.eq(404);
         done();
       })
         .catch(err => {
         //   console.log()
-            console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
+            // console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
             // done()
       });
   });

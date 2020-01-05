@@ -18,10 +18,9 @@ module.exports = {
   },
   createUser: function(object, callback) {
     // First check if the username already exists
-    console.log(object)
     dbo
       .collection("users")
-      .find({ username: object.username })
+      .find({ email: object.email })
       .toArray(function(err, res) {
         // If there is already an entry, return that error
         if (res.length > 0) return callback(null, "Username is taken");
@@ -29,8 +28,9 @@ module.exports = {
         // else, insert into database
         dbo.collection("users").insertOne(object, function(err, res) {
           if (err) return callback(null, err);
-          const { username, hash } = res.ops[0];
-          const user = { username, hash };
+          // console.log(res)
+          const { email, hash } = res.ops[0];
+          const user = { email, hash };
           return callback(user, null);
         });
       });

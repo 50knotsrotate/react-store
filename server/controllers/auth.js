@@ -16,17 +16,19 @@ module.exports = {
       } else {
         // Save into db.
         createUser({ email, hash }, function(user, error) {
-          if (error)
+          if (error) {
             return next({
               message: error,
               statusCode: 500
             });
-
+          }
           // Set user session
           req.session.user = {};
 
-          req.session.user.username = user.username;
+          req.session.user.email = user.email;
+          req.session.user.cart = [];
 
+          console.log(req.session.user)
           // Send response back
           res.status(200).send(req.session.user);
         });
