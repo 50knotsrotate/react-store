@@ -1,59 +1,66 @@
-require('dotenv').config();
+require("dotenv").config();
+
+const { NODE_MAILER_USERNAME, NODE_MAILER_PASS } = process.env;
+
 const PORT = process.env.PORT || 4000;
 
 // Init the database
-const db = require('./db/client');
+const db = require("./db/client");
 
-db.connect(process.env.NODE_ENV === 'development' ? "mongodb://localhost:27017" : 'other thing');
+db.connect(
+  process.env.NODE_ENV === "development"
+    ? "mongodb://localhost:27017"
+    : "other thing"
+);
 
-// const morgan = require('morgan');
 // Might not need axios, but I will leave it here just in case I do.
-const axios = require('axios');
+const axios = require("axios");
 
-const session = require('express-session');
+const session = require("express-session");
 
-const { signin, signup,logout } = require('./controllers/auth');
+const { signin, signup, logout } = require("./controllers/auth");
 
-const express = require('express');
+const nodeMailer = require("./controllers/nodeMailer");
+
+const express = require("express");
 
 const app = express();
+
+nodeMailer.init(NODE_MAILER_USERNAME, NODE_MAILER_PASS);
 
 app.use(
   session({
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-      cookie: { secure: true },
-      maxAge: 100000 //Kind of arbitrary, will put more thought into this later
+    cookie: { secure: true },
+    maxAge: 100000 //Kind of arbitrary, will put more thought into this later
   })
 );
 
-// app.use(morgan('dev'));
-
 app.use(express.json());
 
-app.post('/signup', signup);
+app.post("/signup", signup);
 
-app.post('/signin', signin);
+app.post("/signin", signin);
 
-app.post('/logout', logout);
+app.post("/logout", logout);
 
-app.get('/', (req, res) => { 
-    res.status(200).send('Hello')
-})
+app.get("/", (req, res) => {
+  res.status(200).send("Hello");
+});
 
 //Error handler
-app.use(function (error, req, res, next) {
-    let statuCode = error.statusCode || 500
-    res.status(500).json({
-        error
-    })
-})
+app.use(function(error, req, res, next) {
+  let statusCode = error.statusCode || 500;
+  res.status(500).json({
+    error,
+    statusCode
+  });
+});
 
-
-app.listen(PORT, () => { 
-    console.log(`Listening on port ${PORT}`)
-})
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
 
 module.exports = app;
-

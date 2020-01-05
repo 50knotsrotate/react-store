@@ -36,8 +36,8 @@ module.exports = {
     });
   },
   signin: function(req, res, next) {
-    const { username, password } = req.body;
-    findUser({ username }, function(user, err) {
+    const { email, password } = req.body;
+    findUser({ email }, function(user, err) {
       // If there was an error, forward to error handler
       if (err) return next({
         message: err,
@@ -50,7 +50,7 @@ module.exports = {
         if (correct) {
           // Set the user session
           req.session.user = {};
-          req.session.user.username = user.username;
+          req.session.user.email = user.email;
 
           // and send it to the client
           return res.status(200).send(req.session.user);

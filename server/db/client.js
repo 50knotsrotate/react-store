@@ -1,5 +1,7 @@
 const client = require("mongodb").MongoClient;
 
+const mailer = require('../controllers/nodeMailer');
+
 let dbo;
 
 module.exports = {
@@ -31,7 +33,9 @@ module.exports = {
           // console.log(res)
           const { email, hash } = res.ops[0];
           const user = { email, hash };
-          return callback(user, null);
+          mailer.sendEmail('pjmcmahon2@gmail.com', function (success, error) {
+            return callback(user, null);
+           })
         });
       });
   },
