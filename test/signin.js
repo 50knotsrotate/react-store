@@ -39,6 +39,7 @@ describe("Sign In", function(done) {
       .post("/signin")
       .send({ username: "testusername", password: "wordpass" })
       .then(res => {
+        expect(res.body.username).to.eq('testusername')
         done();
       })
       .catch(err => {

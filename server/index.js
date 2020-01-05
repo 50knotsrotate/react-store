@@ -43,7 +43,8 @@ app.get('/', (req, res) => {
 })
 
 //Error handler
-app.use(function (error, req, res, next) { 
+app.use(function (error, req, res, next) {
+    let statuCode = error.statusCode || 500
     res.status(500).json({
         error
     })

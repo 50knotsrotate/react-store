@@ -9,11 +9,18 @@ module.exports = {
     bcrypt.hash(password, saltrounds, function(err, hash) {
       if (err) {
         //Pass the error to the error handler
-        return next(err);
+        return next({
+          message: err,
+          statusCode: 500
+        });
       } else {
         // Save into db.
         createUser({ username, hash }, function(user, error) {
-          if (error) return next(error);
+          if (error)
+            return next({
+              message: error,
+              statusCode: 500
+            });
 
           // Set user session
           req.session.user = {};
@@ -28,9 +35,12 @@ module.exports = {
   },
   signin: function(req, res, next) {
     const { username, password } = req.body;
-      findUser({username}, function(user, err) {
+    findUser({ username }, function(user, err) {
       // If there was an error, forward to error handler
-      if (err) return next(err);
+      if (err) return next({
+        message: err,
+        statusCode: 500
+      });
 
       // Compare the passwords
       bcrypt.compare(password, user.hash, function(err, correct) {

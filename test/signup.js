@@ -58,7 +58,7 @@ describe("Sign up", function(done) {
           .post("/signup")
           .send({ username: "test123", password: "password" })
           .then(res => {
-            expect(res.body.error).to.eq("Username is taken");
+            expect(res.body.error.message).to.eq("Username is taken");
             done();
           });
       })
