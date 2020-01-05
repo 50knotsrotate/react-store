@@ -14,7 +14,6 @@ module.exports = {
           console.log("collection not created");
         }
       });
-      //   console.log("Database created");
     });
   },
   createUser: function(object, callback) {
