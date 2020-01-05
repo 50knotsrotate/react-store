@@ -4,12 +4,12 @@ const { Link, Item } = Nav;
 
 export default function NavBar() {
   return (
-    <Nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4">
-      <a class="navbar-brand" href="#">
+    <Nav className="navbar navbar-expand-lg navbar-dark bg-dark py-4">
+      <a className="navbar-brand" href="#">
         L.R JENKINS
       </a>
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-toggle="collapse"
         data-target="#navbarColor01"
@@ -17,39 +17,39 @@ export default function NavBar() {
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav mr-auto">
-          <Item class="nav-item active">
-            <Link class="nav-link" href="#">
+      <div className="collapse navbar-collapse" id="navbarColor01">
+        <ul className="navbar-nav mr-auto">
+          <Item className="nav-item active">
+            <Link className="nav-link" href="#">
               Home 
             </Link>
           </Item>
-          <Item class="nav-item">
-            <Link class="nav-link" href="#">
+          <Item className="nav-item">
+            <Link className="nav-link" href="#">
               Features
             </Link>
           </Item>
-          <Item class="nav-item">
-            <Link class="nav-link" href="#">
+          <Item className="nav-item">
+            <Link className="nav-link" href="#">
               Features
             </Link>
           </Item>
-          <Item class="nav-item">
-            <Link class="nav-link" href="#">
+          <Item className="nav-item">
+            <Link className="nav-link" href="#">
               Features
             </Link>
           </Item>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <form className="form-inline my-2 my-lg-0">
           <input
-            class="form-control mr-sm-2"
+            className="form-control mr-sm-2"
             type="text"
             placeholder="Search"
           />
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+          <button className="btn btn-secondary my-2 my-sm-0" type="submit">
             Search
           </button>
         </form>
