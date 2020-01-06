@@ -18,7 +18,6 @@ export default function SignUp(props) {
           <Row>
             <Col sm={7}>
               <h1>Best shop this side of the miss-is-ipp-i!</h1>
-
               <h4 class="text-secondary text-center">
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut
                 natus cupiditate debitis officia, sapiente soluta repellat? Eos

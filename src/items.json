@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "title": "Sunglasses",
+        "price": 49.99,
+        "description": "Cool sunglasses to make your friends jelous",
+        "image_file_path": "../../assets/shopItems/sunglasses.jpg" 
+    },
+    {
+        "id": 2,
+        "title": "Rock",
+        "price": "199.99",
+        "description": "You and your friends will get hours of fun with this regular old rock!",
+        "image_file_path": "../../assets/shopItems/rock.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Blanket",
+        "price": "1999.99",
+        "description": "Keep warm with this state of the art blanket",
+        "image_file_path": "../../assets/shopItems/blanket.jpg"
+    }
+]

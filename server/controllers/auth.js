@@ -42,13 +42,18 @@ module.exports = {
   },
   signin: function(req, res, next) {
     const { email, password } = req.body;
+    console.log(email)
+    console.log(password)
     findUser({ email }, function(user, err) {
       // If there was an error, forward to error handler
-      if (err)
+      if (err) {
+        console.log('server err')
+        console.log(err)
         return next({
           message: err,
           statusCode: 500
         });
+      }
 
       // Compare the passwords
       bcrypt.compare(password, user.hash, function(err, correct) {
@@ -64,6 +69,7 @@ module.exports = {
 
           // If they do not match
         } else {
+          console.log('incorrect pw')
           // Forward the error
           return next({
             message: "Incorrect password",
