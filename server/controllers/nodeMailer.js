@@ -6,8 +6,8 @@ var transporter;
 var mailOptions = {
   from: null,
   to: null,
-  subject: "Welcome!!!",
-  text: welcome
+  subject: null,
+  text: null
 };
 
 module.exports = {
@@ -24,8 +24,10 @@ module.exports = {
       }
     });
   },
-  sendEmail: function(email, message) {
+  sendEmail: function(email, subject, message) {
     mailOptions.to = email;
+    mailOptions.subject = subject;
+    mailOptions.text = message;
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
         console.log(error);

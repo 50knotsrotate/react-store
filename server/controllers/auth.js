@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { createUser, findUser } = require("../db/client");
 const mailer = require("../controllers/nodeMailer");
+const { welcome } = require('../controllers/mailerconstants');
 module.exports = {
   signup: function(req, res, next) {
     const { email, password } = req.body;
@@ -30,10 +31,10 @@ module.exports = {
 
           req.session.user.cart = [];
 
-          mailer.sendEmail("pjmcmahon2@gmail.com");
+          mailer.sendEmail(email, 'Welcome!', welcome);
 
           res.status(200).send(req.session.user);
-          
+
           //TODO: handle error
         });
       }
