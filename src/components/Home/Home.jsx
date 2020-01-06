@@ -2,16 +2,24 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import store from "../../store";
 import ShopItems from '../Cards/FaCard/ShopItems/ShopItems'
-import sunglasses from '../../assets/shopItems/sunglasses.jpg'
-import rock from '../../assets/shopItems/rock.jpg';
-import blanket from '../../assets/shopItems/blanket.jpg';
-const items = [sunglasses, rock, blanket];
-console.log(items)
+import items from '../../../src/items.json'
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 
-// const shopItems = items.map((item, i) => { 
-//   return <ShopItems image={item} description={item.description} title={item.title} />;
-// })
+const shopItems = items.map((item, i) => { 
+  return (
+    <Col sm={12} lg={4} >
+      <ShopItems
+        image={item.image_file_path}
+        description={item.description}
+        title={item.title}
+        price = {item.price}
+      />
+    </Col>
+  );
+})
 
 class Home extends Component {
   constructor(props) {
@@ -28,8 +36,14 @@ class Home extends Component {
   render() {
     return (
       <div>
+        <br />
         {/* <ShopItems image={sunglasses} title = 'sunglasses' description = 'cool sunglasses to make your friends jelous' /> */}
-        {/* {shopItems} */}
+        <Container>
+          <Row>
+        {shopItems}
+
+          </Row>
+        </Container>
       </div>
     ) 
   }
