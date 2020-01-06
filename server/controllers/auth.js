@@ -46,13 +46,13 @@ module.exports = {
       // If there was an error, forward to error handler
       if (err) {
         return next({
-          message: err,
+          message: 'Oops! Looks like we cant find that email.',
           statusCode: 500
         });
       }
 
       // Compare the passwords
-      bcrypt.compare(password, user.hash, function(err, correct) {
+      bcrypt.compare(password, user.hash, function (err, correct) {
         // If the password was correct
         if (correct) {
           // Set the user session
