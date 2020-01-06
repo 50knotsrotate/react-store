@@ -6,6 +6,7 @@ import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import SignUp from "./components/SignUp/SignUp";
+import FaLock from './components/Cards/FaCard/FaCard';
 import store from './store';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <Fragment>
       <Provider store={store}>
         <NavBar />
+        <FaLock type='lock' primaryText='Security' secondaryText='We always hash your passwords - always'/>
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
