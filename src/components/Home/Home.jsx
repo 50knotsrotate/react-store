@@ -11,7 +11,6 @@ class Home extends Component {
   }
 
     componentDidMount = () => {
-        console.log('HOME')
         const { authenticated } = store.getState();
         !authenticated && this.props.history.push('/signup')
   };

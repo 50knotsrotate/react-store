@@ -2,14 +2,21 @@ import React, { Component } from "react";
 import axios from "axios";
 import { connect } from 'react-redux';
 import store from '../../../store';
+import { withRouter } from "react-router-dom";
 
 class SignUp extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      signingUp: true // Used to decide which endpoint to hit when form is submitted
     };
+  }
+
+  componentDidMount = () => { 
+    console.log('FECJKSDNCSD')
+    console.log(this.props)
   }
   
   validateForm = form => {
@@ -19,13 +26,20 @@ class SignUp extends Component {
 
   onSubmit = () => {
     if (this.validateForm(this.state)) {
-        axios.post("/signup", this.state).then(res => { 
-            
+        axios.post(this.state.signingUp ? '/signup': '/signin', this.state).then(res => { 
+          store.dispatch({ type: 'AUTHENTICATE' });
+          this.props.history.push('/')
         }).catch(err => { 
             console.log(err)
         })
     }
   };
+
+  toggleSigningIn = () => { 
+    this.setState({
+      signingUp: !this.state.signingUp
+    })
+  }
 
   formHandler = (target, value) => {
     console.log(this.state);
@@ -38,7 +52,7 @@ class SignUp extends Component {
         
     return (
       <div id="signup">
-        <h1>Sign Up!</h1>
+        <h1>{this.state.signingUp ? "SIGN UP!" : "SIGN IN!"}</h1>
         <input
           name="email"
           type="email"
@@ -56,15 +70,15 @@ class SignUp extends Component {
         />
         <input
           type="submit"
-          value="Sign me up!"
+          value={this.state.signingUp ? "Sign me up!": "Sign In"}
           class="inputButton"
           onClick={() => {
             this.onSubmit(this.state);
           }}
         />
         <div class="text-center">
-          <a href="#" id="">
-            create an account
+          <a onClick={this.toggleSigningIn} href="#" id="">
+            {this.state.signingUp ? "Already have an account?" : "Sign Up Now!"}
           </a>{" "}
           -{" "}
           <a href="#" id="">
@@ -78,4 +92,5 @@ class SignUp extends Component {
 
 const mapStateToProps = ({ authenticated }) => ({ authenticated });
 
-export default connect(mapStateToProps)(SignUp)
+export default connect(mapStateToProps)(withRouter(SignUp))
+// I could probably just pass in a form handler as props and not have to import withRouter, but I guess this is fine.

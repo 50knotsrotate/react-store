@@ -8,18 +8,6 @@ import Home from "./components/Home/Home";
 import SignUp from "./components/SignUp/SignUp";
 import store from './store';
 
-// function reducer(state = { authenticated: false }, action) {
-//   switch (action.type) {
-//     case "AUTHENTICATE":
-//       return {
-//         authenticated: true
-//       };
-//     default:
-//       return state;
-//   }
-// }
-// const store = createStore(reducer);
-
 function App() {
   return (
     <Fragment>

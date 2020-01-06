@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { createUser, findUser } = require("../db/client");
+const mailer = require("../controllers/nodeMailer");
 module.exports = {
   signup: function(req, res, next) {
     const { email, password } = req.body;
@@ -26,11 +27,14 @@ module.exports = {
           req.session.user = {};
 
           req.session.user.email = user.email;
+
           req.session.user.cart = [];
 
-          console.log(req.session.user)
-          // Send response back
+          mailer.sendEmail("pjmcmahon2@gmail.com");
+
           res.status(200).send(req.session.user);
+          
+          //TODO: handle error
         });
       }
     });
@@ -39,10 +43,11 @@ module.exports = {
     const { email, password } = req.body;
     findUser({ email }, function(user, err) {
       // If there was an error, forward to error handler
-      if (err) return next({
-        message: err,
-        statusCode: 500
-      });
+      if (err)
+        return next({
+          message: err,
+          statusCode: 500
+        });
 
       // Compare the passwords
       bcrypt.compare(password, user.hash, function(err, correct) {
