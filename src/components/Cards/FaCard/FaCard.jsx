@@ -16,11 +16,11 @@ const icon = function(type) {
 };
 
 export default function FaCard(props) {
-  return (
-      <div className = 'text-center'style={{width: '150px'}}>
+    return (
+        <div className="text-center">
           <h3>{props.primaryText}</h3>
           <img src={icon(props.type)} style={styles} />
           <p>{props.secondaryText}</p>
-    </div>
-  );
+        </div>
+    );
 }

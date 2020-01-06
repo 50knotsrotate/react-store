@@ -14,7 +14,6 @@ function App() {
     <Fragment>
       <Provider store={store}>
         <NavBar />
-        <FaLock type='lock' primaryText='Security' secondaryText='We always hash your passwords - always'/>
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
