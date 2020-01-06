@@ -1,11 +1,11 @@
-import React, { Fragment} from "react";
+import React, { Fragment } from "react";
 import "./SignUp.css";
 import SignUpForm from "../forms/SignUpForm/SignUpForm";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Features from '../Features/Features'
+import Features from "../Features/Features";
 import FaCard from "../Cards/FaCard/FaCard";
 
 const axios = require("axios");
@@ -36,7 +36,7 @@ export default function SignUp(props) {
         </Container>
       </Jumbotron>
       <Container fluid>
-     <Features />
+        <Features />
       </Container>
     </Fragment>
   );
