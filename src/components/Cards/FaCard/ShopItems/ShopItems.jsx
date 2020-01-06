@@ -22,7 +22,6 @@ export default class ShopItems extends Component {
             <a href="#" className="btn btn-primary">
               Add To Cart
             </a>
-         
         </div>
       </div>
     );

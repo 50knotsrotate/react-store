@@ -8,8 +8,6 @@ import Col from "react-bootstrap/Col";
 import Features from "../Features/Features";
 import FaCard from "../Cards/FaCard/FaCard";
 
-const axios = require("axios");
-
 export default function SignUp(props) {
   return (
     <Fragment>
