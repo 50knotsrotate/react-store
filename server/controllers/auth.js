@@ -56,6 +56,7 @@ module.exports = {
         if (correct) {
           // Set the user session
           req.session.user = {};
+          
           req.session.user.email = user.email;
 
           // and send it to the client
