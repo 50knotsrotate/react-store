@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from 'react-redux';
+import store from '../../../store';
 
-export default class SignUp extends Component {
+class SignUp extends Component {
   constructor() {
     super();
     this.state = {
@@ -9,7 +11,7 @@ export default class SignUp extends Component {
       password: ""
     };
   }
-
+  
   validateForm = form => {
     if (1) return true;
     return false;
@@ -18,7 +20,7 @@ export default class SignUp extends Component {
   onSubmit = () => {
     if (this.validateForm(this.state)) {
         axios.post("/signup", this.state).then(res => { 
-            console.log(res)
+            
         }).catch(err => { 
             console.log(err)
         })
@@ -32,7 +34,8 @@ export default class SignUp extends Component {
     });
   };
 
-  render() {
+    render() {
+        
     return (
       <div id="signup">
         <h1>Sign Up!</h1>
@@ -72,3 +75,7 @@ export default class SignUp extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authenticated }) => ({ authenticated });
+
+export default connect(mapStateToProps)(SignUp)

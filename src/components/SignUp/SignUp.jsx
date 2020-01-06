@@ -1,14 +1,15 @@
 import React from "react";
-import "./MainHeader.css";
-import SignUp from "../forms/SignUp/SignUp";
+import "./SignUp.css";
+import SignUpForm from "../forms/SignUpForm/SignUpForm";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
 const axios = require("axios");
 
-export default function MainHeader() {
-  return (
+export default function SignUp(props) {
+    return(
     <Jumbotron>
       <Container fluid>
         <Row>
@@ -25,10 +26,10 @@ export default function MainHeader() {
             </h4>
           </Col>
           <Col sm={5}>
-            <SignUp />
+            <SignUpForm />
           </Col>
         </Row>
       </Container>
-    </Jumbotron>
-  );
+        </Jumbotron>
+    )
 }

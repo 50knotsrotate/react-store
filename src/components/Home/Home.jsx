@@ -1,19 +1,30 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import store from "../../store";
 
-export default class Home extends Component {
-    constructor(props) { 
-        super(props);
-        this.state = {
+class Home extends Component {
+  constructor(props) {
+    super(props);
+      this.state = {
+        authenticated: false
+    };
+  }
 
-        }
-    }
-
-    
-    render() {
-        return (
-            <div>
-                <h1>This is the home component</h1>
-            </div>
-        )
-    }
+    componentDidMount = () => {
+        console.log('HOME')
+        const { authenticated } = store.getState();
+        !authenticated && this.props.history.push('/signup')
+  };
+  render() {
+    return (
+      <div>
+        <h1>This is the home component</h1>
+      </div>
+    ) 
+  }
 }
+
+const mapStateToProps = ({ authenticated }) => ({ authenticated });
+
+export default connect(mapStateToProps)(Home);
+// export default Home;
