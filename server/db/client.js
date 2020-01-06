@@ -37,17 +37,19 @@ module.exports = {
         });
       });
   },
-  findUser: function(userObj, callback) {
+  findUser: function (userObj, callback) {
+    // console.log(userObj)
     dbo
       .collection("users")
-      .find({ username: userObj.username })
-      .toArray(function(err, res) {
+      .find({ email: userObj.email })
+      .toArray(function (err, res) {
         if (err) return callback(null, err);
-        if (res.length > 1)
+        if (res.length > 1) {
           return callback(null, {
             message: "Internal Server Error",
             statusCode: 500
           });
+        }
         if (!res.length) {
           return callback(null, {
             message: "User not found",
@@ -56,7 +58,7 @@ module.exports = {
         }
         return callback(
           {
-            username: res[0].username,
+            email: res[0].email,
             hash: res[0].hash
           },
           null

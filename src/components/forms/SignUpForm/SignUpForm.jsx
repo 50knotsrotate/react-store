@@ -13,11 +13,6 @@ class SignUp extends Component {
       signingUp: true // Used to decide which endpoint to hit when form is submitted
     };
   }
-
-  componentDidMount = () => { 
-    console.log('FECJKSDNCSD')
-    console.log(this.props)
-  }
   
   validateForm = form => {
     if (1) return true;
@@ -26,7 +21,8 @@ class SignUp extends Component {
 
   onSubmit = () => {
     if (this.validateForm(this.state)) {
-        axios.post(this.state.signingUp ? '/signup': '/signin', this.state).then(res => { 
+      axios.post(this.state.signingUp ? '/signup' : '/signin', this.state).then(res => { 
+          console.log(res)
           store.dispatch({ type: 'AUTHENTICATE' });
           this.props.history.push('/')
         }).catch(err => { 
@@ -67,10 +63,12 @@ class SignUp extends Component {
           placeholder="enter your password"
           required="required"
           class="input pass"
+          onChange={e => this.formHandler(e.target, e.target.value)}
+          value={this.state.password}
         />
         <input
           type="submit"
-          value={this.state.signingUp ? "Sign me up!": "Sign In"}
+          value={this.state.signingUp ? "Sign me up!" : "Sign In"}
           class="inputButton"
           onClick={() => {
             this.onSubmit(this.state);

@@ -42,13 +42,9 @@ module.exports = {
   },
   signin: function(req, res, next) {
     const { email, password } = req.body;
-    console.log(email)
-    console.log(password)
     findUser({ email }, function(user, err) {
       // If there was an error, forward to error handler
       if (err) {
-        console.log('server err')
-        console.log(err)
         return next({
           message: err,
           statusCode: 500
@@ -64,12 +60,15 @@ module.exports = {
           
           req.session.user.email = user.email;
 
+          req.session.user.cart = [];
+
+          req.session.save();
+
           // and send it to the client
-          return res.status(200).send(req.session.user);
+          return res.json(req.session.user);
 
           // If they do not match
         } else {
-          console.log('incorrect pw')
           // Forward the error
           return next({
             message: "Incorrect password",
