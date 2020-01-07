@@ -42,7 +42,7 @@ describe("Sign up", function(done) {
       .then(res => {
         expect(res.body).to.not.eq(null);
         expect(res.body.password).to.not.eq("password");
-        expect(Object.keys(res.body).length).to.eq(1);
+        expect(Object.keys(res.body).length).to.eq(2);
         done();
       });
   });

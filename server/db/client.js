@@ -25,24 +25,24 @@ module.exports = {
       .find({ email: object.email })
       .toArray(function(err, res) {
         // If there is already an entry, return that error
-        if (res.length > 0) return callback(null, "Username is taken");
+        if (res.length > 0)
+          return callback(null, "Account with that email already exists");
 
         // else, insert into database
         dbo.collection("users").insertOne(object, function(err, res) {
           if (err) return callback(null, err);
-          // console.log(res)
           const { email, hash } = res.ops[0];
           const user = { email, hash };
-          return callback(user, null)
+          return callback(user, null);
         });
       });
   },
-  findUser: function (userObj, callback) {
+  findUser: function(userObj, callback) {
     // console.log(userObj)
     dbo
       .collection("users")
       .find({ email: userObj.email })
-      .toArray(function (err, res) {
+      .toArray(function(err, res) {
         if (err) return callback(null, err);
         if (res.length > 1) {
           return callback(null, {

@@ -31,7 +31,7 @@ module.exports = {
 
           req.session.user.cart = [];
 
-          mailer.sendEmail(email, 'Welcome!', welcome);
+          // mailer.sendEmail(email, 'Welcome!', welcome);
 
           res.status(200).send(req.session.user);
 

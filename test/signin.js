@@ -13,7 +13,7 @@ describe("Sign In", function(done) {
     chai
       .request(app)
       .post("/signup")
-      .send({ username: "testusername", password: "wordpass" })
+      .send({ email: "testusername@fake.com", password: "wordpass" })
       .then(res => {
         done();
       })
@@ -28,7 +28,7 @@ describe("Sign In", function(done) {
         console.log("USERS TABLE NOT CLEARED");
         console.log(err);
       } else {
-          done();
+        done();
       }
     });
   });
@@ -39,7 +39,8 @@ describe("Sign In", function(done) {
       .post("/signin")
       .send({ email: "testusername@fake.com", password: "wordpass" })
       .then(res => {
-        expect(res.body.email).to.eq('testusername@fake.com')
+        //console.log(res)
+        expect(res.body.email).to.eq("testusername@fake.com");
         done();
       })
       .catch(err => {
@@ -51,17 +52,16 @@ describe("Sign In", function(done) {
     chai
       .request(app)
       .post("/signin")
-      .send({ username: "testusername@fake.com", password: "wrong password" })
+      .send({ email: "testusername@fake.com", password: "wrong password" })
       .then(res => {
-          // console.log(res.body)
-            expect(res.body.error.message.message).to.be.eq("Incorrect password");
-            expect(res.body.error.statusCode).to.be.eq(404);
+        expect(res.body.error.message).to.be.eq("Incorrect password");
+        expect(res.body.error.statusCode).to.be.eq(404);
         done();
       })
-        .catch(err => {
+      .catch(err => {
         //   console.log()
-            // console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
-            // done()
+        // console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
+        // done()
       });
   });
 });
