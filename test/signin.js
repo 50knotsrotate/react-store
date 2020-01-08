@@ -23,14 +23,9 @@ describe("Sign In", function(done) {
   });
 
   after(function(done) {
-    db.clear(function(err) {
-      if (err) {
-        console.log("USERS TABLE NOT CLEARED");
-        console.log(err);
-      } else {
-        done();
-      }
-    });
+    db.clear()
+      .then(res => done())
+      .catch(err => console.log(err));
   });
 
   it("returns a user when correct credentials are supplied", function(done) {

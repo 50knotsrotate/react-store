@@ -11,27 +11,15 @@ chai.use(chaiHttp);
 describe("Sign up", function(done) {
   beforeEach(function(done) {
     // Clear the users table
-    db.clear(function(err) {
-      if (err) {
-        console.log("USERS TABLE NOT CLEARED");
-        console.log(err);
-      } else {
-        done();
-      }
-    });
+    db.clear()
+      .then(res => done())
+      .catch(err => console.log(err));
   });
 
   after(function(done) {
-    // Clear the users table...again. Once before EACH test, and once after ALL tests.
-    db.clear(function(err) {
-      if (err) {
-        console.log("USERS TABLE NOT CLEARED");
-        console.log(err);
-      } else {
-        done();
-        // process.exit();
-      }
-    });
+    db.clear()
+      .then(res => done())
+      .catch(err => console.log(err));
   });
 
   it("Returns a new user when one signs up", function(done) {
@@ -58,7 +46,9 @@ describe("Sign up", function(done) {
           .post("/signup")
           .send({ email: "test123@test.com", password: "password" })
           .then(res => {
-            expect(res.body.error.message).to.eq("Account with that email already exists");
+            expect(res.body.error.message).to.eq(
+              "Account with that email already exists"
+            );
             done();
           });
       })
@@ -66,5 +56,5 @@ describe("Sign up", function(done) {
         console.log(`ERROR: ${err}`);
         done();
       });
-    });
+  });
 });
