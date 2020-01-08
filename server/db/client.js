@@ -37,33 +37,40 @@ module.exports = {
         });
       });
   },
-  findUser: function(userObj, callback) {
-    // console.log(userObj)
-    dbo
-      .collection("users")
-      .find({ email: userObj.email })
-      .toArray(function(err, res) {
-        if (err) return callback(null, err);
-        if (res.length > 1) {
-          return callback(null, {
-            message: "Internal Server Error",
-            statusCode: 500
-          });
-        }
-        if (!res.length) {
-          return callback(null, {
-            message: "User not found",
-            statusCode: 404
-          });
-        }
-        return callback(
-          {
+  findUser: function(user) {
+    return new Promise(function(resolve, reject) {
+      dbo
+        .collection("users")
+        .find({ email: user.email })
+        .toArray(function(err, res) {
+          if (err) {
+            // Something went wrong trying to find the user
+            return reject({
+              message: "Internal Server Error",
+              statusCode: 500
+            });
+          }
+          //If we get more than one user back, something went seriously wrong. 
+          if (res.length > 1) {
+            return reject({
+              message: "Internal Server Error",
+              statusCode: 500
+            });
+          }
+          //If nothing was returned, the user was not found in the DB
+          if (!res.length) {
+            return reject({
+              message: "User not found",
+              statusCode: 404
+            });
+          }
+          // We got the user!
+          return resolve({
             email: res[0].email,
             hash: res[0].hash
-          },
-          null
-        );
-      });
+          });
+        });
+    });
   },
   // The following are for testing purposes only
   clear: function(callback) {
