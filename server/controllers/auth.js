@@ -17,26 +17,19 @@ module.exports = {
         });
       } else {
         // Save into db.
-        createUser({ email, hash }, function(user, error) {
-          if (error) {
-            return next({
-              message: error,
-              statusCode: 500
-            });
-          }
-          // Set user session
-          req.session.user = {};
+        createUser({ email, hash })
+          .then(user => {
+            req.session.user = {};
 
-          req.session.user.email = user.email;
+            req.session.user.email = user.email;
 
-          req.session.user.cart = [];
+            req.session.user.cart = [];
 
-          // mailer.sendEmail(email, 'Welcome!', welcome);
+            // mailer.sendEmail(email, 'Welcome!', welcome);
 
-          res.status(200).send(req.session.user);
-
-          //TODO: handle error
-        });
+            res.status(200).send(req.session.user);
+          })
+          .catch(err => next(err));
       }
     });
   },
