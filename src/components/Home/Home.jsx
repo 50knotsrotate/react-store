@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 
 const shopItems = items.map((item, i) => {
   return (
-    <Col sm={12} lg={4}>
+    <Col sm={6} lg={4}>
       <ShopItems
         image={item.image_file_path}
         description={item.description}

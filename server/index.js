@@ -38,6 +38,8 @@ app.use(
   })
 );
 
+app.use(express.static('public'))
+
 app.use(express.json());
 
 app.post("/signup", signup);
@@ -45,6 +47,10 @@ app.post("/signup", signup);
 app.post("/signin", signin);
 
 app.post("/logout", logout);
+
+app.get('/', function (req, res) {
+  console.log('Hello from app')
+ })
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
