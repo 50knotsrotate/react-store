@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { connect } from 'react-redux';
-import store from '../../../store';
+import { connect } from "react-redux";
+import store from "../../../store";
 import { withRouter } from "react-router-dom";
 import cogoToast from "cogo-toast";
-
-
 
 class SignUp extends Component {
   constructor(props) {
@@ -16,28 +14,46 @@ class SignUp extends Component {
       signingUp: true // Used to decide which endpoint to hit when form is submitted
     };
   }
-  
+
   validateForm = form => {
-    if (1) return true;
-    return false;
+    let emailRegex = /^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+    let passwordRegex = /^[a-zA-Z!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~]{8,}$/;
+
+    if (!form.email.trim().length || !emailRegex.test(form.email)) {
+      cogoToast.error("Uh oh... that doesnt look like an email to me...");
+      return false;
+    } else if (!passwordRegex.test(form.password)) {
+      this.state.signingUp
+        ? cogoToast.error(
+            "Password must contain at least 8 characters, and be only uppercase letters, lowercase letters, or numbers"
+          )
+        : cogoToast.error(
+            "Incorrect password"
+          ); // Just so I dont accidentally give away my password regex to someone who might be trying to log in to someones elses account
+      return false;
+    }
+    return true;
   };
 
   onSubmit = () => {
     if (this.validateForm(this.state)) {
-      axios.post(this.state.signingUp ? '/signup' : '/signin', this.state).then(res => { 
-          store.dispatch({ type: 'AUTHENTICATE' });
-          this.props.history.push('/')
-        }).catch(err => { 
-          cogoToast.error(err.response.data.error.message);
+      axios
+        .post(this.state.signingUp ? "/signup" : "/signin", this.state)
+        .then(res => {
+          store.dispatch({ type: "AUTHENTICATE" });
+          this.props.history.push("/");
         })
+        .catch(err => {
+          cogoToast.error(err.response.data.error.message);
+        });
     }
   };
 
-  toggleSigningIn = () => { 
+  toggleSigningIn = () => {
     this.setState({
       signingUp: !this.state.signingUp
-    })
-  }
+    });
+  };
 
   formHandler = (target, value) => {
     console.log(this.state);
@@ -46,8 +62,7 @@ class SignUp extends Component {
     });
   };
 
-    render() {
-        
+  render() {
     return (
       <div id="signup">
         <h1>{this.state.signingUp ? "SIGN UP!" : "SIGN IN!"}</h1>
@@ -92,5 +107,5 @@ class SignUp extends Component {
 
 const mapStateToProps = ({ authenticated }) => ({ authenticated });
 
-export default connect(mapStateToProps)(withRouter(SignUp))
+export default connect(mapStateToProps)(withRouter(SignUp));
 // I could probably just pass in a form handler as props and not have to import withRouter, but I guess this is fine.
