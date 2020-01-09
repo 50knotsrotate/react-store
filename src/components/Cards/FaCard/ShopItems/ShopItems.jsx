@@ -1,23 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { Component } from "react";
+import React from "react";
 
-export default class ShopItems extends Component {
-  constructor(props) {
-    super(props);
-  }
+export default function ShopItems(props) {
+
   render() {
     return (
       <div className="card" >
         <img
           className="card-img-top"
-          src={this.props.image}
+          src={props.image}
           alt="Card image cap"
         />
         <div className="card-body">
-          <h5 className="card-title">{this.props.title}</h5>
-          <p className="card-text">{this.props.description}</p>
-            <p className="lead">${this.props.price}</p>
+          <h5 className="card-title">{props.title}</h5>
+          <p className="card-text">{props.description}</p>
+            <p className="lead">${props.price}</p>
             <a href="#" className="btn btn-primary">
               Add To Cart
             </a>
