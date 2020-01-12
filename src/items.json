@@ -3,14 +3,14 @@
         "id": 1,
         "title": "Sunglasses",
         "price": 49.99,
-        "description": "Cool sunglasses to make your friends jelous",
+        "description": "Cool sunglasses to make your friends (and haters) jelous.",
         "image_file_path": "/assets/shopItems/sunglasses.jpg" 
     },
     {
         "id": 2,
         "title": "Rock",
         "price": "199.99",
-        "description": "Just a regular old rock to play with!",
+        "description": "Just a regular old rock to play with! Perfect for birthdays",
         "image_file_path": "/assets/shopItems/rock.jpg"
     },
     {

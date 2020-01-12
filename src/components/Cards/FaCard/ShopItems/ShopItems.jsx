@@ -3,8 +3,6 @@
 import React from "react";
 
 export default function ShopItems(props) {
-
-  render() {
     return (
       <div className="card" >
         <img
@@ -22,5 +20,4 @@ export default function ShopItems(props) {
         </div>
       </div>
     );
-  }
 }
