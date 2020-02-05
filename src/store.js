@@ -1,8 +1,13 @@
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
+const initialState = {
+  authenticated: false,
+  cart: []
+}
 
-function reducer(state = { authenticated: false }, action) {
+
+function reducer(state = initialState, action) {
   switch (action.type) {
     case "AUTHENTICATE":
       return {
