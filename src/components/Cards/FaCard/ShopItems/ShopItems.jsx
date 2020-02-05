@@ -1,23 +1,30 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
+import items from '../../../../../src/items.json'
+import Col from "react-bootstrap/Col";
 
 export default function ShopItems(props) {
+
+  return items.map((item, i) => {
     return (
-      <div className="card" >
-        <img
-          className="card-img-top"
-          src={props.image}
-          alt="Card image cap"
-        />
-        <div className="card-body">
-          <h5 className="card-title">{props.title}</h5>
-          <p className="card-text">{props.description}</p>
-            <p className="lead">${props.price}</p>
+      <Col>
+        <div className="card">
+          <img
+            className="card-img-top"
+            src={item.image_file_path}
+            alt="Card image cap"
+          />
+          <div className="card-body">
+            <h5 className="card-title">{item.title}</h5>
+            <p className="card-text">{item.description}</p>
+            <p className="lead">${item.price}</p>
             <a href="#" className="btn btn-primary">
               Add To Cart
             </a>
+          </div>
         </div>
-      </div>
+      </Col>
     );
+  });
 }

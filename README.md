@@ -378,7 +378,67 @@ describe("Sign In", function(done) {
 
 ```
 
-#### I ran the tests, and they are all passing. Still more to write and this is not finished, but thats all for today. 
-###### Note for tomorrow: The errors are being handled in different ways across the app. Sometimes only a string is being forwarded to the error handler(```next('some error message')```), while others get passed an object (```next(message: 'error message', statusCode: 400)```). I need to update each error so the error handler always gets the object. Also no ```expect``` is being called on the response when we signin with correct credentials. 
 
-#### Ok, thats been taken care of. I think its time I do some react stuff. ```npm install react-router-dom redux react-redux react-redux-form```
+#### Now I am at the point where I have authentication and a simple store with a few items. The way I decided to do this is may not be the "best" way, but this is more of an excersise than an app I am actaully expecting people to use. What I have decided on doing is
+
+#### - Create a json object which contains data about each object in the store (including a path to the image associated with that image)
+
+```json
+[
+    {
+        "id": 1,
+        "title": "Sunglasses",
+        "price": 49.99,
+        "description": "Cool sunglasses to make your friends (and haters) jelous.",
+        "image_file_path": "/assets/shopItems/sunglasses.jpg" 
+    },
+    {
+        "id": 2,
+        "title": "Rock",
+        "price": "199.99",
+        "description": "Just a regular old rock to play with! Perfect for birthdays",
+        "image_file_path": "/assets/shopItems/rock.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Blanket",
+        "price": "1999.99",
+        "description": "Keep warm with this state of the art blanket",
+        "image_file_path": "/assets/shopItems/blanket.jpg"
+    }
+]
+```
+
+#### - sending those images to the client from /public/assets/shopItems
+```javascript
+  app.use(express.static('public'))
+ ```
+
+#### then looping over the items in the JSON object in the shopItems component (Which is placed inside the Home component)
+
+```javascript
+items.map((item, i) => {
+    return (
+      <Col>
+        <div className="card">
+          <img
+            className="card-img-top"
+            src={item.image_file_path}
+            alt="Card image cap"
+          />
+          <div className="card-body">
+            <h5 className="card-title">{item.title}</h5>
+            <p className="card-text">{item.description}</p>
+            <p className="lead">${item.price}</p>
+            <a href="#" className="btn btn-primary">
+              Add To Cart
+            </a>
+          </div>
+        </div>
+      </Col>
+```
+
+#### Now I've got a store! Woo! Now I have two things on my mind: 
+
+* How am I going to manage the *state* of the users cart? That is, how am I going to keep track of what the user has added to their cart? One option is to manage it through redux - super simple to get that set up, but has a drawback - the users cart will not be saved if the user exits the website. They will lose their cart. On the other hand, I could keep track of the user cart on the server, and save data between sessions, but this would mean having to make a request to the server each time a uer hits "add to cart". Since I don't have any callback functions that would be associated with a succesfull or unsuccesful request to the server (except maybe a little popup), this shouldnt be a problem.. but there is one problem with this approach - I just don't feel like doing that. Tinkering with a database halfway through writing an app usually leads to trouble). I have decided on the first option - redux. Lets go do that.
+

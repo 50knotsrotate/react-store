@@ -7,19 +7,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const shopItems = items.map((item, i) => {
-  return (
-    <Col sm={6} lg={4}>
-      <ShopItems
-        image={item.image_file_path}
-        description={item.description}
-        title={item.title}
-        price={item.price}
-      />
-    </Col>
-  );
-});
-
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +24,9 @@ class Home extends Component {
       <div>
         <br />
         <Container>
-          <Row>{shopItems}</Row>
+          <Row>
+            <ShopItems />
+          </Row>
         </Container>
       </div>
     );

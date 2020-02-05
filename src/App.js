@@ -18,6 +18,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/signup" component={SignUp} />
+            <Route path="/cart" component={() => <p>Cart</p>} />
           </Switch>
         </Router>
       </Provider>
