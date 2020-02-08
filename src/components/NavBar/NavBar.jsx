@@ -49,9 +49,15 @@ function NavBar() {
               </Item>
             </ul>
             <form className="form-inline my-2 my-lg-0">
-              <button className="btn btn-secondary my-2 my-sm-0" type="submit">
-                Your Cart
-              </button>
+              <Link to = "/cart">
+                {" "}
+                <button
+                  className="btn btn-secondary my-2 my-sm-0"
+                  type="submit"
+                >
+                  Cart
+                </button>
+              </Link>
             </form>
           </div>
         </Fragment>

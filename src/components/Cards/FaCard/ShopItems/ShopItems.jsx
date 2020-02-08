@@ -1,10 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/img-redundant-alt */
+import cogoToast from "cogo-toast";
+import { connect } from "react-redux";
+import store from "../../../../store";
 import React from "react";
 import items from '../../../../../src/items.json'
 import Col from "react-bootstrap/Col";
 
-export default function ShopItems(props) {
+function addToCart(title, price) { 
+  store.dispatch({ type: "ADD_TO_CART", payload: { title, price } })
+  cogoToast.success(`${title} added to cart!`)
+}
+
+function ShopItems(props) {
 
   return items.map((item, i) => {
     return (
@@ -19,7 +27,7 @@ export default function ShopItems(props) {
             <h5 className="card-title">{item.title}</h5>
             <p className="card-text">{item.description}</p>
             <p className="lead">${item.price}</p>
-            <a href="#" className="btn btn-primary">
+            <a href="#" className="btn btn-primary" onClick={() => addToCart(item.title, item.price)}>
               Add To Cart
             </a>
           </div>
@@ -28,3 +36,4 @@ export default function ShopItems(props) {
     );
   });
 }
+export default connect()(ShopItems);

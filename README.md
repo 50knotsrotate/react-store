@@ -307,7 +307,6 @@ signin: function(req, res, next) {
 
 #### Now, I just have to write some tests to make sure this behaves as expected.
 
-
 ```javascript
 const assert = require("chai").assert;
 const app = require("../server/index");
@@ -339,7 +338,7 @@ describe("Sign In", function(done) {
         console.log("USERS TABLE NOT CLEARED");
         console.log(err);
       } else {
-          done();
+        done();
       }
     });
   });
@@ -362,22 +361,19 @@ describe("Sign In", function(done) {
       .request(app)
       .post("/signin")
       .send({ username: "testusername", password: "wrong password" })
-        .then(res => {
-            expect(res.body.error.message).to.be.eq("Incorrect password");
-            expect(res.body.error.statusCode).to.be.eq(404);
+      .then(res => {
+        expect(res.body.error.message).to.be.eq("Incorrect password");
+        expect(res.body.error.statusCode).to.be.eq(404);
         done();
       })
-        .catch(err => {
+      .catch(err => {
         //   console.log()
-            console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
-            // done()
+        console.log(`ERROR: TEST USER NOT INSERTED: ${err}`);
+        // done()
       });
   });
 });
-
-
 ```
-
 
 #### Now I am at the point where I have authentication and a simple store with a few items. The way I decided to do this is may not be the "best" way, but this is more of an excersise than an app I am actaully expecting people to use. What I have decided on doing is
 
@@ -385,34 +381,35 @@ describe("Sign In", function(done) {
 
 ```json
 [
-    {
-        "id": 1,
-        "title": "Sunglasses",
-        "price": 49.99,
-        "description": "Cool sunglasses to make your friends (and haters) jelous.",
-        "image_file_path": "/assets/shopItems/sunglasses.jpg" 
-    },
-    {
-        "id": 2,
-        "title": "Rock",
-        "price": "199.99",
-        "description": "Just a regular old rock to play with! Perfect for birthdays",
-        "image_file_path": "/assets/shopItems/rock.jpg"
-    },
-    {
-        "id": 3,
-        "title": "Blanket",
-        "price": "1999.99",
-        "description": "Keep warm with this state of the art blanket",
-        "image_file_path": "/assets/shopItems/blanket.jpg"
-    }
+  {
+    "id": 1,
+    "title": "Sunglasses",
+    "price": 49.99,
+    "description": "Cool sunglasses to make your friends (and haters) jelous.",
+    "image_file_path": "/assets/shopItems/sunglasses.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Rock",
+    "price": "199.99",
+    "description": "Just a regular old rock to play with! Perfect for birthdays",
+    "image_file_path": "/assets/shopItems/rock.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Blanket",
+    "price": "1999.99",
+    "description": "Keep warm with this state of the art blanket",
+    "image_file_path": "/assets/shopItems/blanket.jpg"
+  }
 ]
 ```
 
 #### - sending those images to the client from /public/assets/shopItems
+
 ```javascript
-  app.use(express.static('public'))
- ```
+app.use(express.static("public"));
+```
 
 #### then looping over the items in the JSON object in the shopItems component (Which is placed inside the Home component)
 
@@ -438,7 +435,59 @@ items.map((item, i) => {
       </Col>
 ```
 
-#### Now I've got a store! Woo! Now I have two things on my mind: 
+#### Now I've got a store! Woo! Next thing on my mind:
 
-* How am I going to manage the *state* of the users cart? That is, how am I going to keep track of what the user has added to their cart? One option is to manage it through redux - super simple to get that set up, but has a drawback - the users cart will not be saved if the user exits the website. They will lose their cart. On the other hand, I could keep track of the user cart on the server, and save data between sessions, but this would mean having to make a request to the server each time a uer hits "add to cart". Since I don't have any callback functions that would be associated with a succesfull or unsuccesful request to the server (except maybe a little popup), this shouldnt be a problem.. but there is one problem with this approach - I just don't feel like doing that. Tinkering with a database halfway through writing an app usually leads to trouble). I have decided on the first option - redux. Lets go do that.
+- How am I going to manage the _state_ of the users cart? That is, how am I going to keep track of what the user has added to their cart? One option is to manage it through redux - super simple to get that set up, but has a drawback - the users cart will not be saved if the user exits the website. They will lose their cart. On the other hand, I could keep track of the user cart on the server, and save data between sessions, but this would mean having to make a request to the server each time a uer hits "add to cart". Since I don't have any callback functions that would be associated with a succesfull or unsuccesful request to the server (except maybe a little popup), this shouldnt be too difficult.. but there is one problem with this approach - I don't feel like doing that. Tinkering with a database halfway through writing an app usually leads to trouble. I have decided on the first option - redux. Lets go do that.
 
+#### We already have our redux store setup, all I need to do here is add a ADD_TO_CART action which will take the name and price of the item as its payload. If the user already has said item in their cart, just add one to its quantity. If not, add it as a new item. I want the cart object to look something like this
+
+```javascript
+    cart: [
+      {
+        title: "blanket",
+        price: 1999.99,
+        quantity: 7
+      },
+      {
+        title: "rock",
+        price: 199.99,
+        quantity: 2
+      }
+    ]
+```
+
+#### First I have to send that object to the redux store when it is clicked. This is done by importing the redux store, and adding an onClick listener to the "add to cart" button. 
+
+```javascript
+<a href="#" className="btn btn-primary" onClick={() => store.dispatch({ 
+  type: "ADD_TO_CART", payload: {name: item.title, price: item.price}
+  })}> 
+```
+
+#### and then handle that object in the redux store
+
+```javascript
+case "ADD_TO_CART":
+      // Find out if the item exists
+      let item = state.cart.filter(
+        item => item.name === action.payload.name
+      )[0];
+
+      // If the result of the above filter returns undefined, it does not exist in the cart
+      if (item) {
+        item.quantity++;
+        return state;
+      } else {
+        state.cart.push({
+          name: action.payload.name,
+          price: action.payload.price,
+          quantity: 1
+        });
+        return state;
+      }
+
+```
+
+#### Okay I admit it may look like the worst pile of spaghetti code you have ever seen, but I will fix it later. Too much to do and too little time to do it. Its working, just trust me. 
+
+#### Right now I want to create a nice HTML table for the user
