@@ -56,7 +56,6 @@ class SignUp extends Component {
   };
 
   formHandler = (target, value) => {
-    console.log(this.state);
     this.setState({
       [target.name]: value
     });
