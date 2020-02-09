@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import store from "../../store";
+import axios from 'axios'
 import "./Cart.css";
 
 class Cart extends Component {
@@ -13,7 +14,21 @@ class Cart extends Component {
 
   componentDidMount() {}
 
-    onToken = () => {
+    onToken = token => {
+        axios
+          .post("/charge", {
+            stripeToken: token.id
+          })
+          .then(response => {
+            this.setState({
+              showPremiumModal: false,
+              showModal: false
+            });
+            alert("You have subscribed to pro, go you!");
+          })
+          .catch(err => {
+            alert("Oh no, something went wrong.");
+          });
       
   };
   render() {
