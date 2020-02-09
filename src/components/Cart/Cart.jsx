@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
 import store from "../../store";
 import "./Cart.css";
 
@@ -11,11 +12,17 @@ class Cart extends Component {
   }
 
   componentDidMount() {}
+
+    onToken = () => {
+      
+  };
   render() {
     const { cart } = store.getState();
     const finalPrice = cart.reduce((acc, curr) => {
       return acc + +curr.price * curr.quantity;
     }, 0);
+      
+      const key = process.env.REACT_APP_STRIPE_KEY
 
     const items = cart.map((item, i) => (
       <tr>
@@ -103,9 +110,10 @@ class Cart extends Component {
                     <h5 class="font-weight-bold">{`$${finalPrice + 10}`}</h5>
                   </li>
                 </ul>
-                <a href="#" class="btn btn-dark rounded-pill py-2 btn-block">
-                  Procceed to checkout
-                </a>
+                <StripeCheckout
+                  token={this.onToken}
+                  stripeKey={key}
+                />
               </div>
             </div>
           </div>

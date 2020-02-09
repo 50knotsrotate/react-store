@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const { purchase } = require('./controllers/stripe');
+
 const { NODE_MAILER_USERNAME, NODE_MAILER_PASS } = process.env;
 
 const PORT = process.env.PORT || 4000;
@@ -47,6 +49,8 @@ app.post("/signup", signup);
 app.post("/signin", signin);
 
 app.post("/logout", logout);
+
+app.post('/purchase', purchase)
 
 app.get('/', function (req, res) {
   console.log('Hello from app')
