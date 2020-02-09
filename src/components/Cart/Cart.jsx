@@ -12,16 +12,11 @@ class Cart extends Component {
 
   componentDidMount() {}
   render() {
-      const { cart } = store.getState();
-      const finalPrice = cart.reduce((acc, curr) => {
-        //   console.log('curr')
-        //   console.log(curr)
-          
-          return acc + (+curr.price * curr.quantity)
-      }, 0)
+    const { cart } = store.getState();
+    const finalPrice = cart.reduce((acc, curr) => {
+      return acc + +curr.price * curr.quantity;
+    }, 0);
 
-      console.log('FINAL PRICE')
-      console.log(finalPrice)
     const items = cart.map((item, i) => (
       <tr>
         <th scope="row" class="border-0">
@@ -97,19 +92,15 @@ class Cart extends Component {
                 <ul class="list-unstyled mb-4">
                   <li class="d-flex justify-content-between py-3 border-bottom">
                     <strong class="text-muted">Order Subtotal </strong>
-                                    <strong>{`$${finalPrice}`}</strong>
+                    <strong>{`$${finalPrice}`}</strong>
                   </li>
                   <li class="d-flex justify-content-between py-3 border-bottom">
                     <strong class="text-muted">Shipping and handling</strong>
                     <strong>$10.00</strong>
                   </li>
-                  {/* <li class="d-flex justify-content-between py-3 border-bottom">
-                    <strong class="text-muted">Tax</strong>
-                    <strong>$0.00</strong>
-                  </li> */}
                   <li class="d-flex justify-content-between py-3 border-bottom">
                     <strong class="text-muted">Total</strong>
-                                    <h5 class="font-weight-bold">{`$${finalPrice + 10}`}</h5>
+                    <h5 class="font-weight-bold">{`$${finalPrice + 10}`}</h5>
                   </li>
                 </ul>
                 <a href="#" class="btn btn-dark rounded-pill py-2 btn-block">
