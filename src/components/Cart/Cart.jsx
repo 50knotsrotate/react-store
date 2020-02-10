@@ -12,7 +12,9 @@ class Cart extends Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+    componentDidMount() {
+      
+  }
 
     onToken = token => {
         axios
@@ -20,11 +22,11 @@ class Cart extends Component {
             stripeToken: token.id
           })
           .then(response => {
-            this.setState({
-              showPremiumModal: false,
-              showModal: false
-            });
-            alert("You have subscribed to pro, go you!");
+            // this.setState({
+            //   showPremiumModal: false,
+            //   showModal: false
+            // });
+            // alert("You have subscribed to pro, go you!");
           })
           .catch(err => {
             alert("Oh no, something went wrong.");
@@ -37,7 +39,7 @@ class Cart extends Component {
       return acc + +curr.price * curr.quantity;
     }, 0);
       
-      const key = process.env.REACT_APP_STRIPE_KEY
+      const key = process.env.REACT_APP_STRIPE_SK_TEST;
 
     const items = cart.map((item, i) => (
       <tr>

@@ -490,4 +490,8 @@ case "ADD_TO_CART":
 
 #### Okay I admit it may look like the worst pile of spaghetti code you have ever seen, but I will fix it later. Too much to do and too little time to do it. Its working, just trust me. 
 
-#### Right now I want to create a nice HTML table for the user
+#### I am going to take a step back here because I realized I forgot something important - my routes are not protected. As it stands now, a user can visit /cart without logging in. I don't want this. Now it would be easy for me to just connect to the redux store and redirect the user back to /signup if they are not authenticated, but what happens if I add more pages? More components that will need to access the redux state = more mess & more work. What I plam to do is create a <ProtectedRoute> HOC to replace the react-router-dom ```<Route />``` component. I want to accomplish 2 things with this HOC:
+#### 1. The API should be the same as ```<Route/>```
+#### 2. It should connect to the redux store and redirect if the user is not authenticated. 
+
+#### This way I can handle all the redirecting in one place. 

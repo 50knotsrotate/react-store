@@ -28,7 +28,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-stripe-checkout": "^2.6.3",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "stripe": "^8.14.0"
   },
   "devDependencies": {
     "morgan": "1.9.1",
